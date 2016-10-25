@@ -1,4 +1,5 @@
 FROM ubuntu:xenial
+MAINTAINER Pascal Martineau <pascal.animateur@gmail.com>
 
 # Add official PHP ppa
 COPY ondrej-php-xenial.list /etc/apt/sources.list.d/ondrej-php-xenial.list
@@ -7,6 +8,7 @@ COPY ondrej-php-xenial.list /etc/apt/sources.list.d/ondrej-php-xenial.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
     apt-get update && apt-get install -y \
         apache2 \
+        build-essential \
         ca-certificates \
         curl \
         nano \
@@ -38,5 +40,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     chmod +x wp-cli.phar && \
     mv wp-cli.phar /usr/local/bin/wp
 
+RUN rm /var/www/html/index.html
+
 VOLUME /var/www/html
 EXPOSE 80
+
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
